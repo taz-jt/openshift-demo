@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: BuildConfig
 metadata:
-    labels:
-        app: openshift-demo
-    name: openshift-demo
+  labels:
+    app: openshift-demo
+  name: openshift-demo-pipeline
 spec:
-    source:
-        type: git
-        git:
-            ref: openshift-demo
-            uri: https://github.com/MagnumOpuses/af-portability.git
-    strategy:
-        jenkinsPipelineStrategy:
-            jenkinsfilePath: ./Jenkinsfile
-        type: JenkinsPipeline
-    triggers:
-        - github:
-              secret: secret
-          type: GitHub
+  source:
+    type: git
+    git:
+      ref: openshift-demo
+      uri: https://github.com/taz-jt/openshift-demo.git
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: ./Jenkinsfile
+    type: JenkinsPipeline
+  triggers:
+    - github:
+        secret: secret
+      type: GitHub
