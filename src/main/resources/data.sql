@@ -1,0 +1,1 @@
+INSERT INTO users(id, name, email, password) VALUES('2222', 'Monk Sig', 'mon_sig@hotmail.com', 'fmnci848jknjvnjvioufd90089rjhf#€%dmkijdfsiu#€dFR€#D€')
