@@ -39,6 +39,60 @@ objects:
           name: openshift-demo:latest
       triggers: []
       nodeSelector: {}
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: "${APPLICATION_NAME}"
+      annotations:
+        description: "Exposes and load balances the application pods"
+    spec:
+      ports:
+        - name: http
+          port: 8080
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        deploymentconfig: "${APPLICATION_NAME}"
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: "${APPLICATION_NAME}"
+      annotations:
+        description: "Defines how to deploy the application server"
+        template.alpha.openshift.io/wait-for-ready: "true"
+    spec:
+      strategy:
+        type: Rolling
+      triggers:
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${APPLICATION_NAME}"
+            from:
+              kind: ImageStreamTag
+              namespace: "${NAMESPACE}"
+              name: "${APPLICATION_NAME}:latest"
+        - type: ConfigChange
+      replicas: 1
+      selector:
+        name: "${APPLICATION_NAME}"
+      template:
+        metadata:
+          name: "${APPLICATION_NAME}"
+          labels:
+            name: "${APPLICATION_NAME}"
+        spec:
+          containers:
+            - name: "${APPLICATION_NAME}"
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+          restartPolicy: Always
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+          schedulerName: default-scheduler
 parameters:
   - name: APPLICATION_NAME
     displayName: Name
@@ -49,7 +103,7 @@ parameters:
     displayName: Namespace
     description: "The OpenShift Namespace where the ImageStream resides."
     required: true
-    value: openshift-demo
+    value: jobtech-openshift-demo
   - name: SOURCE_REPOSITORY_URL
     displayName: "Git Repository URL"
     description: "The URL of the repository with your application source code."

@@ -21,4 +21,4 @@ RUN  chmod -R a+rw /build
 USER 10000
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+CMD java -jar ./minstarter-*.jar
