@@ -21,4 +21,5 @@ RUN  chmod -R a+rw /build
 USER 10000
 EXPOSE 8080
 
+WORKDIR /build/target
 CMD java -jar ./minstarter-*.jar
